@@ -31,8 +31,6 @@ Then on Mar 6, Droidspaces v5 shows up and suddenly there are two brand new file
 
 And now the iptables code has this safety contract at the top: "Never flush any chain (would kill Android tethering/hotspot). Never change any chain policy. Never touch rules we did not create. Only INSERT rules scoped to our bridge. Always check existence before inserting (fully idempotent)." That's exactly how nspawn.sh does it and the exact opposite of what v4 was doing.
 
-Here's the updated comparison section:
-
 **Side-by-side: what actually makes it work on Android**
 
 Bridge and veth pairs are basic Linux stuff you can find in any tutorial. These four patterns are what make namespace networking actually work on Android. None of them exist in any tutorial, StackOverflow answer, or the PR he cited as his reference. They all exist in nspawn.sh published Feb 10, and they all appeared in Droidspaces v5 on Mar 6.
