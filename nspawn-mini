@@ -10,7 +10,7 @@
 # No daemons. No D-Bus. No dependencies beyond a POSIX shell,
 # a few coreutils or busybox, and a kernel >= 4.19.
 
-#set -x # debug flag
+[ ! -z "$DEBUG" ] && set -x # debug flag
 set -eu
 
 RED=$(printf '\033[31m')

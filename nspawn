@@ -86,7 +86,7 @@
 #   sudo nsenter -t $(sudo pgrep -nfx init) -ea chroot / su -
 
 VERSION="1.0.1"
-#set -x # debug flag
+[ ! -z "$DEBUG" ] && set -x # debug flag
 set -eu
 
 # Android routing priority offsets
