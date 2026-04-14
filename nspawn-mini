@@ -13,12 +13,31 @@
 [ ! -z "$DEBUG" ] && set -x # debug flag
 set -eu
 
+# Android busybox detection; we need it for pivot_root and mount fallbacks
+BUSYBOX=""
+
 RED=$(printf '\033[31m')
 GREEN=$(printf '\033[32m')
 NC=$(printf '\033[0m')
 
 die() { printf '%sError: %s%s\n' "$RED" "$*" "$NC" >&2; exit 1; }
 info() { printf '%s==> %s%s\n' "$GREEN" "$*" "$NC" >&2; }
+
+find_busybox() {
+    [ -n "$BUSYBOX" ] && return 0
+    if command -v busybox >/dev/null 2>&1; then
+        BUSYBOX="$(command -v busybox)"
+        return 0
+    fi
+    local path
+    for path in /data/adb/modules/busybox-ndk/system/*/busybox /data/adb/magisk/busybox /data/adb/ksu/bin/busybox /data/adb/ap/bin/busybox; do
+        if [ -f "$path" ]; then
+            BUSYBOX="$path"
+            return 0
+        fi
+    done
+    return 1
+}
 
 # Android quirks
 if [ -n "${ANDROID_ROOT:-}" ] && [ -n "${ANDROID_DATA:-}" ]; then
@@ -29,8 +48,8 @@ if [ -n "${ANDROID_ROOT:-}" ] && [ -n "${ANDROID_DATA:-}" ]; then
     pivot_root() { toybox pivot_root "$@"; }
 
     # toybox mount is missing required features
-    if command -v busybox >/dev/null 2>&1; then
-        mount() { busybox mount "$@"; }
+    if find_busybox; then
+        mount() { "$BUSYBOX" mount "$@"; }
     elif [ "$(command -v mount)" = "/system/bin/mount" ]; then
         die "toybox mount is not supported"
     fi
@@ -38,8 +57,8 @@ fi
 
 if command -v unshare >/dev/null; then
     unshare() { command unshare "$@"; }
-elif command -v busybox && busybox unshare --help >/dev/null 2>&1; then
-    unshare() { busybox unshare "$@"; }
+elif find_busybox && "$BUSYBOX" unshare --help >/dev/null 2>&1; then
+    unshare() { "$BUSYBOX" unshare "$@"; }
 else
     die "Need unshare command"
 fi
