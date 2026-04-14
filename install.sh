@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-REPO="https://raw.githubusercontent.com/nspawn-sh/nspawn.sh/main"
+REPO="https://raw.githubusercontent.com/ponces/nspawn.sh/main"
 
 if [ -n "${ANDROID_ROOT:-}" ] && [ -n "${ANDROID_DATA:-}" ]; then
     INSTALL_DIR="${PREFIX:-/data/data/com.termux/files/usr}/bin"

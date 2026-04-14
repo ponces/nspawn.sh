@@ -8,7 +8,7 @@ No daemons. No D-Bus. No dependencies beyond a POSIX shell, a few coreutils (or 
 
 ### Install:
 ```sh
-curl -fL https://raw.githubusercontent.com/nspawn-sh/nspawn.sh/main/install.sh | sh
+curl -fL https://raw.githubusercontent.com/ponces/nspawn.sh/main/install.sh | sh
 ```
 
 ### Get a rootfs:
